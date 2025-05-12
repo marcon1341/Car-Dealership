@@ -1,12 +1,12 @@
 public class Vehicle {
-        private int vin;
-        private int year;
-        private String make;
-        private String model;
-        private String vehicleType;
-        private String color;
-        private int odometer;
-        private double price;
+    private int vin;
+    private int year;
+    private String make;
+    private String model;
+    private String vehicleType;
+    private String color;
+    private int odometer;
+    private double price;
 
         //constructor
         public Vehicle(int vin, int year, String make, String model, String vehicleType, String color, int odometer, double price){
@@ -20,19 +20,19 @@ public class Vehicle {
             this.price = price;
         }
         //getters
-
-        public int getVin() {return vin;}
-        public int getYear() {return year;}
-        public String getMake() {return make;}
-        public String getModel() {return model;}
-        public String getVehicleType() {return vehicleType;}
-        public String getColor() {return color;}
-        public int getOdometer() {return odometer;}
-        public double getPrice() {return price;}
+//
+         int getVin() {return vin;}
+         int getYear() {return year;}
+         String getMake() {return make;}
+         String getModel() {return model;}
+         String getVehicleType() {return vehicleType;}
+         String getColor() {return color;}
+         int getOdometer() {return odometer;}
+         double getPrice() {return price;}
 
         @Override
         public String toString(){
-            return String.format("%d | %d | %s | %s | %s | %s | %,d miles | $%,.2f" , vin,year,make,model,vehicleType,color,odometer,price);
+            return String.format("VIN: %d | YEAR: %d | MAKE: %s | MODEL: %s | VEHICLE TYPE: %s | COLOR: %s | ODOMETER: %,d miles | PRICE: $%,.2f" , vin,year,make,model,vehicleType,color,odometer,price);
         }
 }
 
