@@ -12,7 +12,7 @@ public class UserInterface {
         this.in = new BufferedReader(new InputStreamReader(System.in));
     }
     public void display() throws IOException {
-        System.out.println("=== Welcome to " + dealership.getName() + " ===");
+        System.out.println("=== Welcome to Marcus Auto Shop ===");
         String command = "";
 
         while (!command.equalsIgnoreCase("x")) {
