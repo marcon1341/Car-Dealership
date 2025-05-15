@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -25,7 +27,10 @@ public class UserInterface {
                           Y) year
                           C) color
                           O) odometer
+                          R) Return Leased Vehicle
+                          S) Sell/Lease
                           T) type (e.g. sedan)
+                          V) View Contracts
                       +) add
                       -) remove
                       X) e(x)it
@@ -41,7 +46,10 @@ public class UserInterface {
                 case "y" -> processGetByYearRequest();
                 case "c" -> processGetByColorRequest();
                 case "o" -> processGetByMileageRequest();
+                case "s" -> processGetBySellOrLeaseRequest();
                 case "t" -> processGetByTypeRequest();
+                case "r" -> processReturnLeasedVehicleRequest();
+                case "v" -> processViewByContractsRequest();
                 case "+" -> processAddVehicleRequest();
                 case "-" -> processRemoveVehicleRequest();
                 case "x" -> System.out.println("Exiting...");
@@ -191,4 +199,81 @@ private void processRemoveVehicleRequest() {
         System.out.println("Vehicle not found.");
             }
     }
+    public void processGetBySellOrLeaseRequest(){
+        try {
+            int vin = getInt("Enter VIN: ");
+            Vehicle found = null;
+            for (Vehicle vehicle : dealership.getAllVehicles()) {
+                if (vehicle.getVin() == vin) {
+                    found = vehicle;
+                    break;
+                }
+            }
+            if (found == null) {
+                System.out.println("Vehcle not found in inventory.");
+                return;
+            }
+            //customer info
+            String customerName = getString("Enter customer name: ");
+            String customerEmail = getString("Enter customer email: )");
+
+            String type = "";
+            while (!type.equalsIgnoreCase("sale") && !type.equalsIgnoreCase("lease")) {
+                type = getString("Sale or Lease? (enter sale or lease): ");
+            }
+            //create contract type
+            Contract contract;
+            String today = LocalDate.now().toString();
+            if(type.equalsIgnoreCase("sale")){
+                String finance="";
+                while (!finance.equalsIgnoreCase("y") && !finance.equalsIgnoreCase("n")) {
+                    finance = getString("Will the customer finance? (y/n):");
+                }
+                boolean isFinanced = finance.equalsIgnoreCase("y");
+                contract = new SalesContract(today, customerName,customerEmail,found,isFinanced);
+                }else {
+                contract = new LeaseContract(today,customerName, customerEmail,found);
+            }
+            //save
+            new ContractFileManager().saveContract(contract);
+            //remove it from inventory
+            dealership.removeVehicle(found);
+            new DealershipFileManager().saveDealership(dealership);
+
+            System.out.println("Contract created and vehicle removed from inventory!");
+        }catch (Exception e){
+            System.out.println("Error during sale/lease: " + e.getMessage());
+        }
+
+    }
+    private void processReturnLeasedVehicleRequest() {
+        int vin = getInt("Enter VIN of returned vehicle: ");
+
+        int year = getInt("Enter year: ");
+        String make = getString("Enter make: ");
+        String model = getString("Enter model: ");
+        String type = getString("Enter type: ");
+        String color = getString("Enter color: ");
+        int odometer = getInt("Enter current odometer: ");
+        double price = Double.parseDouble(getString("Enter resale price: "));
+
+        Vehicle returnedVehicle = new Vehicle(vin, year, make, model, type, color, odometer, price);
+        dealership.addVehicle(returnedVehicle);
+        new DealershipFileManager().saveDealership(dealership);
+        System.out.println("Lease return processed and vehicle added to inventory.");
+    }
+    private void processViewByContractsRequest() {
+        System.out.println("\n=== ALL CONTRACTS ===");
+        try (BufferedReader reader = new BufferedReader(new FileReader("contracts.csv"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            System.out.println("No contracts found or error reading file.");
+        }
+
+    }
+
+
 }
