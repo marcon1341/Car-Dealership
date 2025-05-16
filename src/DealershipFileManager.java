@@ -7,7 +7,7 @@ public class DealershipFileManager {
         try {
             //read the file from .csv
             BufferedReader reader = new BufferedReader(new FileReader("inventory.csv"));
-            String line;//hold each line from reader
+            String line;
 
             //get the dealership info
             line = reader.readLine();
@@ -58,34 +58,34 @@ public class DealershipFileManager {
         }
     }
 
-    public static void main(String[] args) {
-        DealershipFileManager fl = new DealershipFileManager();
-        Dealership dealership = fl.getDealership();
-        if (dealership != null) {
-            System.out.println("Vehicle's loaded: "+ dealership.getAllVehicles().size());
-            for (Vehicle vehicle : dealership.getAllVehicles()) {
-               System.out.println(vehicle);
-            }
-
-            System.out.println("Vehicle's from 5000 ~ 10,000");
-            for(Vehicle vehicle: dealership.getVehiclesByPrice(5000,12000)){
-                System.out.println( vehicle);
-            }
-
-            if (dealership != null) {
-                System.out.println("Dealership loaded:");
-                System.out.println(dealership);
-
-                System.out.println("\nINVENTORY LOADED FROM FILE");
-                for (Vehicle v : dealership.getAllVehicles()) {
-                    System.out.println(v);
-                }
-            } else {
-                System.out.println("Failed to load dealership from inventory.csv");
-            }
-
-        } else {
-            System.out.println("Failed to load");
-        }
-    }
+//    public static void main(String[] args) {
+//        DealershipFileManager fl = new DealershipFileManager();
+//        Dealership dealership = fl.getDealership();
+//        if (dealership != null) {
+//            System.out.println("Vehicle's loaded: "+ dealership.getAllVehicles().size());
+//            for (Vehicle vehicle : dealership.getAllVehicles()) {
+//               System.out.println(vehicle);
+//            }
+//
+//            System.out.println("Vehicle's from 5000 ~ 10,000");
+//            for(Vehicle vehicle: dealership.getVehiclesByPrice(5000,12000)){
+//                System.out.println( vehicle);
+//            }
+//
+//            if (dealership != null) {
+//                System.out.println("Dealership loaded:");
+//                System.out.println(dealership);
+//
+//                System.out.println("\nINVENTORY LOADED FROM FILE");
+//                for (Vehicle v : dealership.getAllVehicles()) {
+//                    System.out.println(v);
+//                }
+//            } else {
+//                System.out.println("Failed to load dealership from inventory.csv");
+//            }
+//
+//        } else {
+//            System.out.println("Failed to load");
+//        }
+//    }
 }
