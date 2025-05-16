@@ -58,14 +58,14 @@ public class UserInterface {
     }
 
     public void processGetAllVehiclesRequest(){
-         var list  = this.dealership.getAllVehicles();
-         if(list.size() == 0){
-             System.out.println("None found.");
-             return;
-         }
-         for(Vehicle vehicle : list){
-             System.out.println(vehicle);
-         }
+        var list  = this.dealership.getAllVehicles();
+        if(list.size() == 0){
+            System.out.println("None found.");
+            return;
+        }
+        for(Vehicle vehicle : list){
+            System.out.println(vehicle);
+        }
     }
     int getInt(String name){
         System.out.printf("%s ", name);
@@ -82,121 +82,121 @@ public class UserInterface {
     }
     String getString(String name){
         System.out.printf("%s ", name);
-         String value = null;
-         while (value == null){
-             try {
-                 value = in.readLine().trim();
-                 if(value.isEmpty()){
-                     System.out.println("Input cannot be empty. Try again: ");
-                     value = null;
-                 }
-             } catch (IOException e) {
-                 System.out.println("Try Again:");
-             }
-         }
-         return value;
+        String value = null;
+        while (value == null){
+            try {
+                value = in.readLine().trim();
+                if(value.isEmpty()){
+                    System.out.println("Input cannot be empty. Try again: ");
+                    value = null;
+                }
+            } catch (IOException e) {
+                System.out.println("Try Again:");
+            }
+        }
+        return value;
     }
 
     public void processGetByPriceRequest(){
-         var list = this.dealership.getVehiclesByPrice(getInt("Minimum"),getInt("Maximum"));
-         if(list.size() == 0){
-             System.out.println("None found");
-         }
-         for(Vehicle vehicle : list){
-             System.out.println(vehicle);
-         }
-    }
-    public void processGetByYearRequest(){
-         var list = this.dealership.getVehiclesByYear(getInt("Minimum Year"), getInt("Maximum Year"));
-         if(list.size() == 0){
-             System.out.println("None found");
-         }
-         for(Vehicle vehicle : list){
-             System.out.println(vehicle);
-         }
-    }
-    public void processGetByMakeModelRequest(){
-         var list = this.dealership.getVehiclesByMakeModel(getString("Make"),getString("Model"));
-         if(list.size() == 0){
-             System.out.println("None found");
-         }
-         for(Vehicle vehicle : list){
-             System.out.println(vehicle);
-         }
-    }
-    public void processGetByColorRequest(){
-         var list = this.dealership.getVehiclesByColor(getString("Color"));
-         if(list.size() == 0){
-             System.out.println("None found");
-         }
-         for(Vehicle vehicle : list){
-             System.out.println(vehicle);
-         }
-    }
-    public void processGetByMileageRequest(){
-         var list = this.dealership.getVehiclesByMileage(getInt("Minimum Mileage"),getInt("Maximum Mileage"));
-         if(list.size() == 0){
-             System.out.println("None found");
-         }
-         for(Vehicle vehicle: list){
-             System.out.println(vehicle);
-         }
-    }
-    public void processGetByTypeRequest(){
-         var list = this.dealership.getVehiclesByVehiclesType(getString("Type"));
-         if(list.size() == 0){
-             System.out.println("None found");
-         }
-         for(Vehicle vehicle: list){
-             System.out.println(vehicle);
-         }
-    }
-private void processAddVehicleRequest() {
-    System.out.println("\n=== ADD VEHICLE ===");
-
-    int vin = getInt("VIN");
-
-    int year = getInt("YEAR");
-
-    String make = getString("MAKE");
-
-    String model = getString("MODEL");
-
-    String type = getString("TYPE");
-
-    String color = getString("COLOR");
-
-    int odometer = getInt("ODOMETER");
-
-    double price = Double.parseDouble(getString("PRICE"));
-
-    Vehicle newVehicle = new Vehicle(vin, year, make, model, type, color, odometer, price);
-    dealership.addVehicle(newVehicle);
-
-    new DealershipFileManager().saveDealership(dealership);
-    System.out.println("Vehicle added successfully.");
-}
-
-private void processRemoveVehicleRequest() {
-    System.out.print("Enter VIN of vehicle to remove: ");
-    int vin = getInt("VIN");
-
-    Vehicle toRemove = null;
-    for (Vehicle vehicle : dealership.getAllVehicles()) {
-        if (vehicle.getVin() == vin) {
-            toRemove = vehicle;
-            break;
+        var list = this.dealership.getVehiclesByPrice(getInt("Minimum"),getInt("Maximum"));
+        if(list.size() == 0){
+            System.out.println("None found");
+        }
+        for(Vehicle vehicle : list){
+            System.out.println(vehicle);
         }
     }
+    public void processGetByYearRequest(){
+        var list = this.dealership.getVehiclesByYear(getInt("Minimum Year"), getInt("Maximum Year"));
+        if(list.size() == 0){
+            System.out.println("None found");
+        }
+        for(Vehicle vehicle : list){
+            System.out.println(vehicle);
+        }
+    }
+    public void processGetByMakeModelRequest(){
+        var list = this.dealership.getVehiclesByMakeModel(getString("Make"),getString("Model"));
+        if(list.size() == 0){
+            System.out.println("None found");
+        }
+        for(Vehicle vehicle : list){
+            System.out.println(vehicle);
+        }
+    }
+    public void processGetByColorRequest(){
+        var list = this.dealership.getVehiclesByColor(getString("Color"));
+        if(list.size() == 0){
+            System.out.println("None found");
+        }
+        for(Vehicle vehicle : list){
+            System.out.println(vehicle);
+        }
+    }
+    public void processGetByMileageRequest(){
+        var list = this.dealership.getVehiclesByMileage(getInt("Minimum Mileage"),getInt("Maximum Mileage"));
+        if(list.size() == 0){
+            System.out.println("None found");
+        }
+        for(Vehicle vehicle: list){
+            System.out.println(vehicle);
+        }
+    }
+    public void processGetByTypeRequest(){
+        var list = this.dealership.getVehiclesByVehiclesType(getString("Type"));
+        if(list.size() == 0){
+            System.out.println("None found");
+        }
+        for(Vehicle vehicle: list){
+            System.out.println(vehicle);
+        }
+    }
+    private void processAddVehicleRequest() {
+        System.out.println("\n=== ADD VEHICLE ===");
 
-    if (toRemove != null) {
-        dealership.removeVehicle(toRemove);
+        int vin = getInt("VIN");
+
+        int year = getInt("YEAR");
+
+        String make = getString("MAKE");
+
+        String model = getString("MODEL");
+
+        String type = getString("TYPE");
+
+        String color = getString("COLOR");
+
+        int odometer = getInt("ODOMETER");
+
+        double price = Double.parseDouble(getString("PRICE"));
+
+        Vehicle newVehicle = new Vehicle(vin, year, make, model, type, color, odometer, price);
+        dealership.addVehicle(newVehicle);
 
         new DealershipFileManager().saveDealership(dealership);
-        System.out.println("Vehicle removed.");
-    } else {
-        System.out.println("Vehicle not found.");
+        System.out.println("Vehicle added successfully.");
+    }
+
+    private void processRemoveVehicleRequest() {
+        System.out.print("Enter VIN of vehicle to remove: ");
+        int vin = getInt("VIN");
+
+        Vehicle toRemove = null;
+        for (Vehicle vehicle : dealership.getAllVehicles()) {
+            if (vehicle.getVin() == vin) {
+                toRemove = vehicle;
+                break;
             }
+        }
+
+        if (toRemove != null) {
+            dealership.removeVehicle(toRemove);
+
+            new DealershipFileManager().saveDealership(dealership);
+            System.out.println("Vehicle removed.");
+        } else {
+            System.out.println("Vehicle not found.");
+        }
     }
     public void processGetBySellOrLeaseRequest(){
         try {
@@ -214,23 +214,23 @@ private void processRemoveVehicleRequest() {
             }
             //customer info
             String customerName = getString("Enter customer name: ");
-            String customerEmail = getString("Enter customer email: )");
+            String customerEmail = getString("Enter customer email: ");
 
             String type = "";
-            while (!type.equalsIgnoreCase("sale") && !type.equalsIgnoreCase("lease")) {
-                type = getString("Sale or Lease? (enter sale or lease): ");
+            while (!type.equalsIgnoreCase("s") && !type.equalsIgnoreCase("l")) {
+                type = getString("Sale or Lease? (enter s or l): ");
             }
             //create contract type
             Contract contract;
             String today = LocalDate.now().toString();
-            if(type.equalsIgnoreCase("sale")){
+            if(type.equalsIgnoreCase("s")){
                 String finance="";
                 while (!finance.equalsIgnoreCase("y") && !finance.equalsIgnoreCase("n")) {
                     finance = getString("Will the customer finance? (y/n):");
                 }
                 boolean isFinanced = finance.equalsIgnoreCase("y");
                 contract = new SalesContract(today, customerName,customerEmail,found,isFinanced);
-                }else {
+            }else {
                 contract = new LeaseContract(today,customerName, customerEmail,found);
             }
             //save
