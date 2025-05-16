@@ -222,45 +222,68 @@ public class UserInterface {
             }
             //create contract type
             Contract contract;
-            String today = LocalDate.now().toString();
-            if(type.equalsIgnoreCase("s")){
-                String finance="";
+            String today = java.time.LocalDate.now().toString();
+
+            if (type.equalsIgnoreCase("l")) {
+                int currentYear = java.time.LocalDate.now().getYear();
+                if (currentYear - found.getYear() > 3) {
+                    System.out.println("You can't lease a vehicle over 3 years old.");
+                    return;
+                }
+                contract = new LeaseContract(today, customerName, customerEmail, found);
+            } else {
+                String finance = "";
                 while (!finance.equalsIgnoreCase("y") && !finance.equalsIgnoreCase("n")) {
                     finance = getString("Will the customer finance? (y/n):");
                 }
                 boolean isFinanced = finance.equalsIgnoreCase("y");
-                contract = new SalesContract(today, customerName,customerEmail,found,isFinanced);
-            }else {
-                contract = new LeaseContract(today,customerName, customerEmail,found);
+                contract = new SalesContract(today, customerName, customerEmail, found, isFinanced);
             }
-            //save
-            new ContractFileManager().saveContract(contract);
-            //remove it from inventory
-            dealership.removeVehicle(found);
-            new DealershipFileManager().saveDealership(dealership);
 
-            System.out.println("Contract created and vehicle removed from inventory!");
-        }catch (Exception e){
+            // DISPLAY DETAILS
+            System.out.println("\n----- Contract Details -----");
+            System.out.printf("Year: %d\n", found.getYear());
+            System.out.printf("Make: %s\n", found.getMake());
+            System.out.printf("Model: %s\n", found.getModel());
+            System.out.printf("Type: %s\n", found.getVehicleType());
+            System.out.printf("Color: %s\n", found.getColor());
+            System.out.printf("Odometer: %d\n", found.getOdometer());
+            System.out.printf("Base Price: $%.2f\n", found.getPrice());
+
+            if (contract instanceof SalesContract) {
+                SalesContract sc = (SalesContract) contract;
+                System.out.printf("Sales Tax: $%.2f\n", sc.getSalesTaxAmount());
+                System.out.printf("Recording Fee: $%.2f\n", sc.getRecordingFee());
+                System.out.printf("Processing Fee: $%.2f\n", sc.getProcessingFee());
+                System.out.printf("Total Price: $%.2f\n", sc.getTotalPrice());
+                if (sc.isFinanced()) {
+                    System.out.printf("Monthly Payment: $%.2f\n", sc.getMonthlyPayment());
+                }
+            } else if (contract instanceof LeaseContract) {
+                LeaseContract lc = (LeaseContract) contract;
+                System.out.printf("Lease Fee: $%.2f\n", lc.getLeaseFee());
+                System.out.printf("Ending Value: $%.2f\n", lc.getEndingValue());
+                System.out.printf("Total Price: $%.2f\n", lc.getTotalPrice());
+                System.out.printf("Monthly Payment: $%.2f\n", lc.getMonthlyPayment());
+            }
+
+
+            // Confirm and Save
+            String confirm = getString("Do you want to proceed with this sale/lease? (y/n): ");
+            if (confirm.equalsIgnoreCase("y")) {
+                new ContractFileManager().saveContract(contract);
+                dealership.removeVehicle(found);
+                new DealershipFileManager().saveDealership(dealership);
+                System.out.println("Contract created and vehicle removed from inventory!");
+            } else {
+                System.out.println("Sale/lease cancelled.");
+            }
+
+        } catch (Exception e) {
             System.out.println("Error during sale/lease: " + e.getMessage());
         }
-
     }
-//    private void processReturnLeasedVehicleRequest() {
-//        int vin = getInt("Enter VIN of returned vehicle: ");
-//
-//        int year = getInt("Enter year: ");
-//        String make = getString("Enter make: ");
-//        String model = getString("Enter model: ");
-//        String type = getString("Enter type: ");
-//        String color = getString("Enter color: ");
-//        int odometer = getInt("Enter current odometer: ");
-//        double price = Double.parseDouble(getString("Enter resale price: "));
-//
-//        Vehicle returnedVehicle = new Vehicle(vin, year, make, model, type, color, odometer, price);
-//        dealership.addVehicle(returnedVehicle);
-//        new DealershipFileManager().saveDealership(dealership);
-//        System.out.println("Lease return processed and vehicle added to inventory.");
-//    }
+
 private void processReturnLeasedVehicleRequest() {
     int vin = getInt("Enter VIN of returned vehicle: ");
 
@@ -276,7 +299,7 @@ private void processReturnLeasedVehicleRequest() {
             // Find the contract with this VIN and type LEASE
             if (fields.length > 11 && fields[3].equals(String.valueOf(vin)) && fields[11].equalsIgnoreCase("LEASE") && returnedContractLine == null) {
                 returnedContractLine = line; // Save this contract for extracting info
-                continue; // Do not add to contracts (deletes it)
+                continue;
             }
             contracts.add(line);
         }
@@ -291,7 +314,6 @@ private void processReturnLeasedVehicleRequest() {
         return;
     }
 
-    // (Optional) Extract vehicle info from contract line instead of prompting the user:
     String[] fields = returnedContractLine.split("\\|");
     int year = Integer.parseInt(fields[4]);
     String make = fields[5];
